@@ -91,11 +91,13 @@ export const updateProduk = async (req, res) => {
     });
   }
   const name = req.body.title;
+  const harga = req.body.title;
+  const deskripsi = req.body.title;
   const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
 
   try {
     await Produk.update(
-      { name: name, image: fileName, url: url },
+      { name: name, harga: harga, deskripsi: deskripsi, image: fileName, url: url },
       {
         where: {
           id: req.params.id,
