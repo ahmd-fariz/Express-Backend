@@ -13,11 +13,10 @@ export const getProduk = async (req, res) => {
 };
 
 export const createProduk = (req, res) => {
-  if (req.files === null)
+  if (!req.files || !req.files.file)
     return res.status(400).json({ msg: "No File Uploaded" });
-  const name = req.body.title;
-  const harga = req.body.title;
-  const deskripsi = req.body.title;
+
+  const { name, harga, deskripsi } = req.body;
   const file = req.files.file;
   const fileSize = file.data.length;
   const ext = path.extname(file.name);
@@ -30,19 +29,23 @@ export const createProduk = (req, res) => {
   if (fileSize > 5000000)
     return res.status(422).json({ msg: "Image must be less than 5 MB" });
 
-  file.mv(`./public/images/${fileName}`, async (err) => {
+  const uploadPath = `./public/images/${fileName}`;
+
+  file.mv(uploadPath, async (err) => {
     if (err) return res.status(500).json({ msg: err.message });
+
     try {
       await Produk.create({
-        name: name,
-        harga: harga,
-        deskripsi: deskripsi,
+        name,
+        harga,
+        deskripsi,
         image: fileName,
-        url: url,
+        url,
       });
-      res.status(201).json({ msg: "Produk Created Successfuly" });
+      res.status(201).json({ msg: "Produk Created Successfully" });
     } catch (error) {
       console.log(error.message);
+      res.status(500).json({ msg: "Internal Server Error" });
     }
   });
 };
@@ -97,7 +100,13 @@ export const updateProduk = async (req, res) => {
 
   try {
     await Produk.update(
-      { name: name, harga: harga, deskripsi: deskripsi, image: fileName, url: url },
+      {
+        name: name,
+        harga: harga,
+        deskripsi: deskripsi,
+        image: fileName,
+        url: url,
+      },
       {
         where: {
           id: req.params.id,
