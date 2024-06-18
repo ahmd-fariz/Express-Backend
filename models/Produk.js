@@ -9,6 +9,8 @@ const Produk = db.define(
     name: DataTypes.STRING,
     harga: DataTypes.STRING,
     deskripsi: DataTypes.STRING,
+    image: DataTypes.STRING,
+    url: DataTypes.STRING,
   },
   {
     freezeTableName: true,
