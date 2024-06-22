@@ -64,16 +64,16 @@ export const getProdukById = async (req, res) => {
 };
 
 export const updateProduk = async (req, res) => {
-  const Produk = await Produk.findOne({
+  const produk = await Produk.findOne({
     where: {
       id: req.params.id,
     },
   });
-  if (!Produk) return res.status(404).json({ msg: "No Data Found" });
+  if (!produk) return res.status(404).json({ msg: "No Data Found" });
 
   let fileName = "";
   if (req.files === null) {
-    fileName = Produk.image;
+    fileName = produk.image;
   } else {
     const file = req.files.file;
     const fileSize = file.data.length;
@@ -99,7 +99,7 @@ export const updateProduk = async (req, res) => {
   const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
 
   try {
-    await Produk.update(
+    await produk.update(
       {
         name: name,
         harga: harga,
@@ -120,17 +120,17 @@ export const updateProduk = async (req, res) => {
 };
 
 export const deleteProduk = async (req, res) => {
-  const Produk = await Produk.findOne({
+  const produk = await Produk.findOne({
     where: {
       id: req.params.id,
     },
   });
-  if (!Produk) return res.status(404).json({ msg: "No Data Found" });
+  if (!produk) return res.status(404).json({ msg: "No Data Found" });
 
   try {
-    const filepath = `./public/images/${Produk.image}`;
+    const filepath = `./public/images/${produk.image}`;
     fs.unlinkSync(filepath);
-    await Produk.destroy({
+    await produk.destroy({
       where: {
         id: req.params.id,
       },
