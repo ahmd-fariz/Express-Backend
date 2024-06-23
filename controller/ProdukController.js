@@ -1,4 +1,3 @@
-import { json } from "sequelize";
 import Produk from "../models/Produk.js";
 import path from "path";
 import fs from "fs";
@@ -86,16 +85,14 @@ export const updateProduk = async (req, res) => {
     if (fileSize > 5000000)
       return res.status(422).json({ msg: "Image must be less than 5 MB" });
 
-    const filepath = `./public/images/${Produk.image}`;
+    const filepath = `./public/images/${produk.image}`;
     fs.unlinkSync(filepath);
 
     file.mv(`./public/images/${fileName}`, (err) => {
       if (err) return res.status(500).json({ msg: err.message });
     });
   }
-  const name = req.body.title;
-  const harga = req.body.title;
-  const deskripsi = req.body.title;
+  const {name, harga, deskripsi} = req.body;
   const url = `${req.protocol}://${req.get("host")}/images/${fileName}`;
 
   try {
